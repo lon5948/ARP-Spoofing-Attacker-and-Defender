@@ -29,6 +29,7 @@ def mac(ipadd):
 def main():
     interfaces = get_interfaces()
     for interface in interfaces:
+        print("start packet capture on the interface", interface)
         sniff(iface=interface, store=False, prn=process_sniffed_packet)
 
 if __name__ == '__main__':
