@@ -11,9 +11,6 @@ def block_mac_address(mac_address):
         command = f"sudo nft add rule ip filter input ether saddr {mac_address} drop"
     subprocess.Popen(command, shell=True)
 
-def sniff(interface):
-    sniff(iface=interface, store=False, prn=process_sniffed_packet)
-
 def process_sniffed_packet(packet):
     if packet.haslayer(ARP) and packet[ARP].op == 2:
         originalmac = mac(packet[ARP].psrc)
@@ -32,7 +29,7 @@ def mac(ipadd):
 def main():
     interfaces = get_interfaces()
     for interface in interfaces:
-        sniff(interface)
+        sniff(iface=interface, store=False, prn=process_sniffed_packet)
 
 if __name__ == '__main__':
     main()
