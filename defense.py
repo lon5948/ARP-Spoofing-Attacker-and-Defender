@@ -1,4 +1,4 @@
-import subprocess
+import subprocess, sys
 from scapy.all import *
 from interfaces import get_interfaces
 
@@ -16,7 +16,7 @@ def process_sniffed_packet(packet):
         originalmac = mac(packet[ARP].psrc)
         responsemac = packet[ARP].hwsrc
         if originalmac != None and originalmac != responsemac:
-            print("[*] ALERT!! You are under attack, the ARP table is being poisoned.!")
+            print("[*] ALERT!! You are under attack, the ARP table is being poisoned!")
             block_mac_address(packet[ARP].hwsrc)
 
 def mac(ipadd):
@@ -30,10 +30,14 @@ def mac(ipadd):
         return None
 
 def main():
-    interfaces = get_interfaces()
-    for interface in interfaces:
-        print("start packet capture on the interface", interface)
-        sniff(iface=interface, store=False, prn=process_sniffed_packet)
+    try:
+        interfaces = get_interfaces()
+        for interface in interfaces:
+            print("start packet capture on the interface", interface)
+            sniff(iface=interface, store=False, prn=process_sniffed_packet)
+    except KeyboardInterrupt:
+        subprocess.run("iptables -t nat -F", shell=True)
+        sys.exit()
 
 if __name__ == '__main__':
     main()

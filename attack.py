@@ -93,7 +93,7 @@ def main():
     gateway_ip, cidr = get_network_info()
     network = gateway_ip + "/" + str(cidr)
     scanning(network)
-    print_available_devices(gateway_ip)
+    #print_available_devices(gateway_ip)
 
     s = threading.Thread(target=sslsplit)
     s.daemon = True
