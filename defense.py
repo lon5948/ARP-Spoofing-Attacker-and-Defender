@@ -15,7 +15,7 @@ def process_sniffed_packet(packet):
     if packet.haslayer(ARP) and packet[ARP].op == 2:
         originalmac = mac(packet[ARP].psrc)
         responsemac = packet[ARP].hwsrc
-        if originalmac != responsemac:
+        if originalmac != None and originalmac != responsemac:
             print("[*] ALERT!! You are under attack, the ARP table is being poisoned.!")
             block_mac_address(packet[ARP].hwsrc)
 
@@ -24,7 +24,10 @@ def mac(ipadd):
     br = Ether(dst="ff:ff:ff:ff:ff:ff")
     arp_req_br = br / arp_request
     list_1 = srp(arp_req_br, timeout=5, verbose=False)[0]
-    return list_1[0][1].hwsrc
+    if len(list_1) > 0:
+        return list_1[0][1].hwsrc
+    else:
+        return None
 
 def main():
     interfaces = get_interfaces()
