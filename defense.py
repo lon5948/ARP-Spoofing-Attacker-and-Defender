@@ -3,7 +3,6 @@ import logging
 import subprocess
 from threading import Thread
 from scapy.all import *
-from banner import show_banner
 from interfaces import get_interfaces, get_gateway_ip
 
 logging.basicConfig(
@@ -70,27 +69,31 @@ def start_mitm_detection(interface, target_ip):
 
 
 def main():
-    show_banner()
+    '''
     interfaces = get_interfaces()
     default_gateway_ip = get_gateway_ip()
 
-    print("Выберите вариант запуска")
-    print("1. Ввести сетевой интерфейс вручную")
-    print(f"2. Запуск на все сетевые устройства \033[1;32m\033[1;32m(Обнаружены ({len(interfaces)}): {interfaces})\033[1;37m\033[1;37m")
+    print("Choose a startup option")
+    print("1. Enter the network interface manually.")
+    print(f"2. Startup on all network devices. \033[1;32m\033[1;32m(Обнаружены ({len(interfaces)}): {interfaces})\033[1;37m\033[1;37m")
 
     choice = input("\033[1;32m\033[1;32m~# \033[1;37m\033[1;37m")
 
     if choice == '1':
-        print("\nВведите имя сетевого интерфейса: (например wlan0)")
+        print("\nPlease enter the name of the network interface: (e.g., wlan0)")
         interface = input("\033[1;32m\033[1;32m~# \033[1;37m\033[1;37m")
         start_mitm_detection(interface, default_gateway_ip)
     elif choice == '2':
-        interfaces = get_interfaces()
-        for interface in interfaces:
-            start_mitm_detection(interface, default_gateway_ip)
+    '''
+    interfaces = get_interfaces()
+    default_gateway_ip = get_gateway_ip()
+    for interface in interfaces:
+        start_mitm_detection(interface, default_gateway_ip)
+    '''
     else:
         print("\033[1;32m[ERROR]\033[1;31m Неверный выбор\033[0m")
         return False
+    '''
 
 if __name__ == '__main__':
     main()

