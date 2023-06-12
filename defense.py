@@ -39,9 +39,9 @@ class DetectorMITMAttack:
                 return False
 
             if arp_packet.op == 2 and arp_packet.hwsrc != arp_packet.hwdst:
-                print(f"\033[1;32m\033[1;32m[ATTENTION]\033[91m Потенциальная MITM-атака обнаружена: \033[91m{arp_packet.hwsrc} ({arp_packet.psrc}) -> \033[1;32m\033[1;32m{arp_packet.hwdst} ({arp_packet.pdst})\033[0m")
+                print(f"\033[1;32m\033[1;32m[ATTENTION]\033[91m A potential MITM attack has been detected. \033[91m{arp_packet.hwsrc} ({arp_packet.psrc}) -> \033[1;32m\033[1;32m{arp_packet.hwdst} ({arp_packet.pdst})\033[0m")
 
-                warn_message = f"Обнаружена MITM-атака: {arp_packet.hwsrc} ({arp_packet.psrc}) -> {arp_packet.hwdst} ({arp_packet.pdst})"
+                warn_message = f"A MITM attack has been detected: {arp_packet.hwsrc} ({arp_packet.psrc}) -> {arp_packet.hwdst} ({arp_packet.pdst})"
                 send_notification(
                     "MITM Detector", 
                     warn_message
@@ -54,15 +54,11 @@ class DetectorMITMAttack:
         return
 
     def start_sniffing(self) -> None:
-        print(f"\033[1;32m\033[1;32m[INFO]\033[91m\033[91m Запуск захвата пакетов на интерфейсе\033[0m {self.interface}")
-        logging.info(f"Запуск захвата пакетов на интерфейсе {self.interface}")
+        print(f"\033[1;32m\033[1;32m[INFO]\033[91m\033[91m Start packet capture on the interface\033[0m {self.interface}")
         sniff(iface=self.interface, prn=self.is_mitm_attack)
 
 
 def start_mitm_detection(interface, target_ip):
-    if interface not in get_interfaces():
-        print("\033[1;32m[ERROR]\033[1;31m Указанный сетевой интерфейс не найден\033[0m")
-        return False
     mitm = DetectorMITMAttack(interface, target_ip)
     thread = Thread(target=mitm.start_sniffing)
     thread.start()
