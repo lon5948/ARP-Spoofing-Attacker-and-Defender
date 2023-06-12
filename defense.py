@@ -1,9 +1,6 @@
-import os
-import logging
 import subprocess
-from threading import Thread
 from scapy.all import *
-from interfaces import get_interfaces, get_gateway_ip
+from interfaces import get_interfaces
 
 def block_mac_address(mac_address):
     fw_command = subprocess.Popen('which iptables', shell=True, stdout=subprocess.PIPE)
