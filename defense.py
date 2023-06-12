@@ -5,6 +5,7 @@ from threading import Thread
 from scapy.all import *
 from interfaces import get_interfaces, get_gateway_ip
 
+"""
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s',
     level=logging.INFO,
@@ -69,6 +70,28 @@ def main():
     default_gateway_ip = get_gateway_ip()
     for interface in interfaces:
         start_mitm_detection(interface, default_gateway_ip)
+"""
+def sniff(interface):
+    sniff(iface=interface, store=False, prn=process_sniffed_packet)
+
+def process_sniffed_packet(packet):
+    if packet.haslayer(ARP) and packet[ARP].op == 2:
+        originalmac = mac(packet[ARP].psrc)
+        responsemac = packet[ARP].hwsrc
+        if originalmac != responsemac:
+            print("[*] ALERT!! You are under attack, the ARP table is being poisoned.!")
+
+def mac(ipadd):
+    arp_request = ARP(pdst=ipadd)
+    br = Ether(dst="ff:ff:ff:ff:ff:ff")
+    arp_req_br = br / arp_request
+    list_1 = srp(arp_req_br, timeout=5, verbose=False)[0]
+    return list_1[0][1].hwsrc
+
+def main():
+    interfaces = get_interfaces()
+    for interface in interfaces:
+        sniff(interface)
 
 if __name__ == '__main__':
     main()

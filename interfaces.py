@@ -13,7 +13,6 @@ def get_interfaces() -> list:
 
 def get_gateway_ip() -> str:
     interfaces = netifaces.interfaces()
-
     priority_interface = None
     max_priority = -1
     for iface in interfaces:
@@ -27,5 +26,4 @@ def get_gateway_ip() -> str:
             priority_interface = iface
 
     router_ip = netifaces.gateways()["default"][netifaces.AF_INET][0]
-
     return router_ip
